@@ -80,7 +80,7 @@ class LatControlLIF(object):
       self.poly_smoothing = max(1.0, float(kegman.conf['polyDamp']) * 100.)
       self.poly_factor = float(kegman.conf['polyFactor'])
       self.future_angle.spring_factor = float(kegman.conf['springFactor'])
-      #self.future_angle.deadzone = float(kegman.conf['deadzone'])
+      self.future_angle.deadzone = float(kegman.conf['deadzone'])
 
   def get_projected_path_error(self, v_ego, angle_feedforward, angle_steers, live_params, path_plan, VM):
     curv_factor = interp(abs(angle_feedforward), [1.0, 5.0], [0.0, 1.0])
@@ -102,7 +102,7 @@ class LatControlLIF(object):
 
   def adjust_angle_gain(self):
     if ((self.pid.f > 0) == (self.pid.i > 0) and (abs(self.pid.i) >= abs(self.previous_integral))):
-      if not abs(self.pid.f + self.pid.i + self.pid.p) > 1: self.angle_ff_gain *= 1.0001
+      if not abs(self.pid.f) > 1: self.angle_ff_gain *= 1.0001
     elif self.angle_ff_gain > 1.0:
       self.angle_ff_gain *= 0.9999
     self.previous_integral = self.pid.i

@@ -17,14 +17,14 @@ class future_angle(object):
     self.spring_factor = 1.0
     self.outer_angle = 0.
     self.inner_angle = 0.
-    self.dead_zone = 1.5
+    self.deadzone = 1.5
   def update(self, v_ego, angle_steers, rate_steers, eps_torque, steer_override):
 
     v_index = int(v_ego // 3)
 
     isOutward = (angle_steers > 0) == (self.inverted * eps_torque > 0) and (eps_torque != 0)
     isConsistent = max(max(self.torque_samples_inward), max(self.torque_samples_outward)) * min(min(self.torque_samples_inward), min(self.torque_samples_outward)) >= 0 and max(self.angle_samples) * min(self.angle_samples) >= 0
-    isDeadzone = (isOutward and abs(angle_steers - self.inner_angle) < self.dead_zone) or (not isOutward and abs(angle_steers - self.outer_angle) < self.dead_zone)
+    isDeadzone = (isOutward and abs(angle_steers - self.inner_angle) < self.deadzone) or (not isOutward and abs(angle_steers - self.outer_angle) < self.deadzone)
 
     if isConsistent and not isDeadzone and abs(self.inverted) >= 1.0 and \
       (self.torque_samples_inward.sum != 0 or self.torque_samples_outward.sum != 0) and \
@@ -66,6 +66,6 @@ class future_angle(object):
     else:
       self.index_increment = 1
       advance_angle = 0.
-    #if (self.frame % 20 == 0): print(self.inner_angle, self.outer_angle, angle_steers, advance_angle)
+    #if (self.frame % 20 == 0): print(self.deadzone, self.spring_factor)
 
     return 0.01 * advance_angle * self.inverted
