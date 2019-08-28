@@ -540,14 +540,15 @@ class CarInterface(object):
     if ret.gasPressed and not self.bosch_honda:
       events.append(create_event('pedalPressed', [ET.PRE_ENABLE]))
 
-    if not self.CP.radarOffCan and self.CS.auto_resume and self.CS.pedal_gas > 0 and self.CS.v_ego > 3.0:
+    '''if not self.CP.radarOffCan and self.CS.auto_resume and self.CS.pedal_gas > 0 and self.CS.v_ego > 3.0:
       if not self.CS.auto_resuming:
         self.CS.auto_resuming = True
       else:
         events.append(create_event('buttonEnable', [ET.ENABLE]))
         self.CS.auto_resuming = False
         self.CS.auto_resume = False
-
+    '''
+    
     # it can happen that car cruise disables while comma system is enabled: need to
     # keep braking if needed or if the speed is very low
     if self.CP.enableCruise and not ret.cruiseState.enabled and c.actuators.brake <= 0.:
