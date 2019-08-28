@@ -61,7 +61,7 @@ class PathPlanner(object):
     angle_steers = sm['carState'].steeringAngle
     cur_time = sec_since_boot()
     angle_offset_average = sm['liveParameters'].angleOffsetAverage
-    angle_offset = sm['controlsState'].dampAngleBias + angle_offset_average
+    #angle_offset = sm['controlsState'].dampAngleBias + angle_offset_average
 
     self.MP.update(v_ego, sm['model'])
 
@@ -74,11 +74,11 @@ class PathPlanner(object):
     self.p_poly = list(self.MP.p_poly)
 
     # prevent over-inflation of desired angle
-    actual_delta = math.radians(max(abs(angle_steers), abs(sm['controlsState'].futureAngleSteers)) - angle_offset) / VM.sR
+    actual_delta = math.radians(max(abs(angle_steers - angle_offset_average), abs(sm['controlsState'].futureAngleSteers - angle_offset_average))) / VM.sR
     self.cur_state[0].delta = clip(self.cur_state[0].delta, -actual_delta, actual_delta)
 
     # account for actuation delay
-    self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, CP.steerActuatorDelay)
+    self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset_average, curvature_factor, VM.sR, CP.steerActuatorDelay)
 
     v_ego_mpc = max(v_ego, 5.0)  # avoid mpc roughness due to low speed
     self.libmpc.run_mpc(self.cur_state, self.mpc_solution,
@@ -130,7 +130,7 @@ class PathPlanner(object):
     plan_send.pathPlan.rProb = float(self.MP.r_prob)
     plan_send.pathPlan.angleSteers = float(self.angle_steers_des_mpc)
     plan_send.pathPlan.rateSteers = float(rate_desired)
-    plan_send.pathPlan.angleBias = float(angle_offset - angle_offset_average)
+    #plan_send.pathPlan.angleBias = float(angle_offset - angle_offset_average)
     plan_send.pathPlan.angleOffset = float(angle_offset_average)
     plan_send.pathPlan.mpcAngles = [float(x) for x in self.mpc_angles]
     plan_send.pathPlan.mpcTimes = [float(x) for x in self.mpc_times]
