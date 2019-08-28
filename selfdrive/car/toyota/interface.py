@@ -60,11 +60,11 @@ class CarInterface(object):
     ret.lateralTuning.init('pid')
     ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
     ret.lateralTuning.pid.dampTime = 0.1
-    ret.lateralTuning.pid.reactMPC = -0.05
+    ret.lateralTuning.pid.reactMPC = 0.05
     ret.lateralTuning.pid.dampMPC = 0.1
     ret.lateralTuning.pid.rateFFGain = 0.4
     ret.lateralTuning.pid.polyFactor = 0.002
-    ret.lateralTuning.pid.polyDampTime = 0.2
+    ret.lateralTuning.pid.polyDampTime = 0.25
     ret.lateralTuning.pid.polyReactTime = 0.5
 
     #ret.lateralTuning.pid.steerPscale = [[1.0, 2.0, 10.0], [1.0, 0.5, 0.25], [1.0, 0.75, 0.5]]  # [abs angles, scale UP, scale DOWN]
@@ -294,7 +294,7 @@ class CarInterface(object):
 
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
-    ret.steeringRate = 0.0
+    ret.steeringRate = self.CS.angle_steers_rate
 
     ret.steeringTorque = self.CS.steer_torque_driver
     ret.steeringPressed = self.CS.steer_override

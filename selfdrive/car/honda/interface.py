@@ -170,13 +170,13 @@ class CarInterface(object):
 
     ret.lateralTuning.pid.kiBP, ret.lateralTuning.pid.kpBP = [[0.], [0.]]
     ret.lateralTuning.pid.kf = 0.00006 # conservative feed-forward
-    ret.lateralTuning.pid.dampTime = 0.02
-    ret.lateralTuning.pid.reactMPC = 0.05
+    ret.lateralTuning.pid.dampTime = 0.1
+    ret.lateralTuning.pid.reactMPC = 0.1
     ret.lateralTuning.pid.dampMPC = 0.1
     ret.lateralTuning.pid.rateFFGain = 0.4
     ret.lateralTuning.pid.polyFactor = 0.002
-    ret.lateralTuning.pid.polyDampTime = 0.15
-    ret.lateralTuning.pid.polyReactTime = 0.5
+    ret.lateralTuning.pid.polyDampTime = 0.25
+    ret.lateralTuning.pid.polyReactTime = 1.0
 
     if candidate in [CAR.CIVIC, CAR.CIVIC_BOSCH]:
       stop_and_go = True
@@ -200,8 +200,8 @@ class CarInterface(object):
       ret.lateralTuning.pid.dampMPC = 0.1
       ret.lateralTuning.pid.rateFFGain = 0.4
       ret.lateralTuning.pid.polyFactor = 0.002
-      ret.lateralTuning.pid.polyDampTime = 0.15
-      ret.lateralTuning.pid.polyReactTime = 0.75
+      ret.lateralTuning.pid.polyDampTime = 0.25
+      ret.lateralTuning.pid.polyReactTime = 1.0
 
     elif candidate in (CAR.ACCORD, CAR.ACCORD_15, CAR.ACCORDH):
       stop_and_go = True
@@ -222,8 +222,8 @@ class CarInterface(object):
       ret.lateralTuning.pid.dampMPC = 0.1
       ret.lateralTuning.pid.rateFFGain = 0.4
       ret.lateralTuning.pid.polyFactor = 0.002
-      ret.lateralTuning.pid.polyDampTime = 0.15
-      ret.lateralTuning.pid.polyReactTime = 0.75
+      ret.lateralTuning.pid.polyDampTime = 0.25
+      ret.lateralTuning.pid.polyReactTime = 1.0
 
     elif candidate == CAR.ACURA_ILX:
       stop_and_go = False

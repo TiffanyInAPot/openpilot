@@ -1,6 +1,7 @@
 import os
 import math
 import numpy as np
+from common.numpy_fast import clip
 
 from common.realtime import sec_since_boot
 from selfdrive.services import service_list
@@ -56,7 +57,7 @@ class PathPlanner(object):
 
   def update(self, sm, CP, VM):
     v_ego = sm['carState'].vEgo
-    #angle_steers = sm['controlsState'].futureAngleSteers
+    #angle_steers = sm['controlsState'].dampAngleSteers
     angle_steers = sm['carState'].steeringAngle
     cur_time = sec_since_boot()
     angle_offset_average = sm['liveParameters'].angleOffsetAverage
@@ -73,9 +74,8 @@ class PathPlanner(object):
     self.p_poly = list(self.MP.p_poly)
 
     # prevent over-inflation of desired angle
-    actual_delta = math.radians(max(abs(sm['controlsState'].futureAngleSteers), abs(angle_steers)) - angle_offset) / VM.sR
-    delta_limit = abs(actual_delta) + abs(0.25 * self.mpc_solution[0].rate[0])
-    self.cur_state[0].delta = np.clip(self.cur_state[0].delta, -delta_limit, delta_limit)
+    actual_delta = math.radians(max(abs(angle_steers), abs(sm['controlsState'].futureAngleSteers)) - angle_offset) / VM.sR
+    self.cur_state[0].delta = clip(self.cur_state[0].delta, -actual_delta, actual_delta)
 
     # account for actuation delay
     self.cur_state = calc_states_after_delay(self.cur_state, v_ego, angle_steers - angle_offset, curvature_factor, VM.sR, CP.steerActuatorDelay)
@@ -89,10 +89,6 @@ class PathPlanner(object):
     mpc_nans = np.any(np.isnan(list(self.mpc_solution[0].delta)))
 
     if not mpc_nans:
-      #if (self.rate_des_prev < 0) != (self.mpc_solution[0].rate[0] < 0):
-      #  delta_adjust = self.cur_state[0].delta - actual_delta
-      #  self.cur_state[0].delta = actual_delta
-      #  self.mpc_solution[0].delta[0] -= delta_adjust
 
       self.mpc_angles[0] = float(math.degrees(self.cur_state[0].delta * VM.sR) + angle_offset_average)
       self.mpc_times[0] = sm.logMonoTime['model'] * 1e-9

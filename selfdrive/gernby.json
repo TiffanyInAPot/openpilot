@@ -1,5 +1,5 @@
 {
-  "tuneRev": "0.1.6",
+  "tuneRev": "0.1.7",
   "Kf": "-1",
   "Ki": "-1",
   "Kp": "-1",
@@ -15,6 +15,6 @@
   "innerGain":"-1",
   "outerGain":"-1",
   "timeConst":"-1",
-  "springFactor":"2.0",
-  "deadzone":"1.5"
+  "springFactor":"7.0",
+  "deadzone":"1.0"
 }

@@ -125,19 +125,6 @@ class LatControlPID(object):
 
   def update(self, active, v_ego, angle_steers, angle_steers_rate, steer_override, blinkers_on, CP, VM, path_plan, live_params):
 
-    if angle_steers_rate == 0.0 and self.calculate_rate:
-      if angle_steers != self.prev_angle_steers:
-        self.steer_counter_prev = self.steer_counter
-        self.rough_steers_rate = (self.rough_steers_rate + 100.0 * (angle_steers - self.prev_angle_steers) / self.steer_counter_prev) / 2.0
-        self.steer_counter = 0.0
-      elif self.steer_counter >= self.steer_counter_prev:
-        self.rough_steers_rate = (self.steer_counter * self.rough_steers_rate) / (self.steer_counter + 1.0)
-      self.steer_counter += 1.0
-      angle_steers_rate = self.rough_steers_rate
-    else:
-      # If non-zero angle_rate is provided, stop calculating angle rate
-      self.calculate_rate = False
-
     pid_log = log.ControlsState.LateralPIDState.new_message()
     pid_log.steerAngle = float(angle_steers)
     pid_log.steerRate = float(angle_steers_rate)
