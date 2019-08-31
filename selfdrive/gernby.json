@@ -1,5 +1,5 @@
 {
-  "tuneRev": "0.0.2",
+  "tuneRev": "0.1.8",
   "Kf": "-1",
   "Ki": "-1",
   "Kp": "-1",
@@ -11,8 +11,9 @@
   "polyReact":"-1",
   "polyDamp":"-1",
   "polyFactor":"-1",
-  "timeConst":"-1",
   "actEffect":"-1",
+  "innerGain":"-1",
   "outerGain":"-1",
-  "innerGain":"-1"
+  "timeConst":"-1",
+  "deadzone":"1.0"
 }

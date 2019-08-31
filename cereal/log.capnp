@@ -419,6 +419,7 @@ struct ControlsState @0x97ff69c53601abf1 {
   jerkFactor @12 :Float32;
   angleSteers @13 :Float32;     # Steering angle in degrees.
   dampAngleSteers @57 :Float32;     # Steering angle in degrees.
+  angleSteersAdvance @58 :Float32;
   angleSteersDes @29 :Float32;
   dampAngleSteersDes @56 :Float32;
   curvature @37 :Float32;       # path curvature from vehicle model

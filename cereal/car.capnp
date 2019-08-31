@@ -80,6 +80,7 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     commIssue @55;
     tooDistracted @56;
     posenetInvalid @57;
+    soundsUnavailable @58;
   }
 }
 
@@ -109,8 +110,10 @@ struct CarState {
 
   # steering wheel
   steeringAngle @7 :Float32;   # deg
+  steeringAdvance @30 :Float32;  # deg
   steeringRate @15 :Float32;   # deg/s
   steeringTorque @8 :Float32;  # TODO: standardize units
+  steeringTorqueEps @27 :Float32;  # TODO: standardize units
   steeringPressed @9 :Bool;    # if the user is using the steering wheel
 
   # cruise state
@@ -125,12 +128,13 @@ struct CarState {
   rightBlinker @21 :Bool;
   genericToggle @23 :Bool;
   readdistancelines @26 :Float32;
-  lkMode @27 :Bool;
+  lkMode @29 :Bool;
 
   # lock info
   doorOpen @24 :Bool;
   seatbeltUnlatched @25 :Bool;
   canValid @28 :Bool;
+
   # which packets this state came from
   canMonoTimes @12: List(UInt64);
 
@@ -341,6 +345,7 @@ struct CarParams {
   radarOffCan @35 :Bool; # True when radar objects aren't visible on CAN
 
   steerActuatorDelay @36 :Float32; # Steering wheel actuator delay in seconds
+  steerAdvanceCycles @41 :Int16;
   openpilotLongitudinalControl @37 :Bool; # is openpilot doing the longitudinal control?
   carVin @38 :Text; # VIN number queried during fingerprinting
   isPandaBlack @39: Bool;
@@ -392,7 +397,9 @@ struct CarParams {
 
     k @6 :List(Float32);  # LQR gain
     l @7 :List(Float32);  # Kalman gain
+    reactMPC @8 :Float32;
   }
+
 
   enum SafetyModel {
     # does NOT match board setting

@@ -12,6 +12,7 @@ from selfdrive.car.honda.carstate import CarState, get_can_parser, get_cam_can_p
 from selfdrive.car.honda.values import CruiseButtons, CAR, HONDA_BOSCH, AUDIO_HUD, VISUAL_HUD, CAMERA_MSGS
 from selfdrive.car import STD_CARGO_KG, CivicParams, scale_rot_inertia, scale_tire_stiffness
 from selfdrive.controls.lib.planner import _A_CRUISE_MAX_V_FOLLOWING
+from selfdrive.car.advance_angle import advance_angle
 
 A_ACC_MAX = max(_A_CRUISE_MAX_V_FOLLOWING)
 
@@ -101,6 +102,8 @@ class CarInterface(object):
     else:
       self.bosch_honda = False
 
+    self.AA = advance_angle(CP)
+
   @staticmethod
   def calc_accel_override(a_ego, a_target, v_ego, v_target):
 
@@ -174,6 +177,7 @@ class CarInterface(object):
     ret.lateralTuning.pid.polyFactor = 0.002
     ret.lateralTuning.pid.polyDampTime = 0.15
     ret.lateralTuning.pid.polyReactTime = 0.5
+    ret.steerAdvanceCycles = 9
 
     if candidate in [CAR.CIVIC, CAR.CIVIC_BOSCH]:
       stop_and_go = True
@@ -461,7 +465,9 @@ class CarInterface(object):
 
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
-    ret.steeringRate = self.CS.angle_steers_rate
+    ret.steeringRate = self.CS.steer_rate_motor
+    self.CS.steer_advance = self.AA.get_steer_advance(self.CS.steer_advance, self.CS.steer_rate_motor * DT_CTRL, self.CS.steer_override, self.frame, self.CS.CP)
+    ret.steeringAdvance = float(self.CS.steer_advance)
 
     # gear shifter lever
     ret.gearShifter = self.CS.gear_shifter
