@@ -142,8 +142,8 @@ class LatControlPID(object):
     pid_log.steerAngle = float(angle_steers)
     #pid_log.steerRate = float(angle_steers_rate)
 
-    max_bias_change = 0.01  # / (abs(self.angle_bias) + 0.0001)
-    self.angle_bias += 0.1 * (float(clip(live_params.angleOffset - live_params.angleOffsetAverage, self.angle_bias - max_bias_change, self.angle_bias + max_bias_change)) - self.angle_bias)
+    #max_bias_change = 0.01  # / (abs(self.angle_bias) + 0.0001)
+    self.angle_bias += 0.0 # 0.1 * (float(clip(live_params.angleOffset - live_params.angleOffsetAverage, self.angle_bias - max_bias_change, self.angle_bias + max_bias_change)) - self.angle_bias)
     self.live_tune(CP)
 
     if v_ego < 0.3 or not active:
