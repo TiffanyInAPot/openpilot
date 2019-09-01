@@ -504,8 +504,22 @@ def manager_prepare():
 
   # build all processes
   os.chdir(os.path.dirname(os.path.abspath(__file__)))
-  for p in managed_processes:
+  
+  params = Params()
+  process_cnt = len(managed_processes)
+  loader_proc = subprocess.Popen(["./spinner"], stdin=subprocess.PIPE,
+        cwd=os.path.join(BASEDIR, "selfdrive", "ui", "spinner"),
+        close_fds=True)
+  spinner_text = "chffrplus" if params.get("Passive")=="1" else "openpilot"
+  
+  for n,p in enumerate(managed_processes):
+    if os.getenv("PREPAREONLY") is None:
+      loader_text = "loading {0}: {1}/{2} {3}".format(spinner_text, n+1, process_cnt, p)
+      loader_proc.stdin.write(loader_text + "\n")
     prepare_managed_process(p)
+    
+  loader_proc.stdin.close()
+  loader_proc.terminate()
 
 def uninstall():
   cloudlog.warning("uninstalling")
@@ -517,6 +531,9 @@ def uninstall():
 def main():
   # the flippening!
   os.system('LD_LIBRARY_PATH="" content insert --uri content://settings/system --bind name:s:user_rotation --bind value:i:1')
+
+  # disable bluetooth
+  os.system('service call bluetooth_manager 8')
 
   if os.getenv("NOLOG") is not None:
     del managed_processes['loggerd']
@@ -585,9 +602,12 @@ def main():
     spinner_proc = None
   else:
     spinner_text = "chffrplus" if params.get("Passive")=="1" else "openpilot"
-    spinner_proc = subprocess.Popen(["./spinner", "loading %s"%spinner_text],
+    init_text = "initializing {0}".format(spinner_text)
+    spinner_proc = subprocess.Popen(["./spinner"], stdin=subprocess.PIPE,
       cwd=os.path.join(BASEDIR, "selfdrive", "ui", "spinner"),
       close_fds=True)
+    spinner_proc.stdin.write(init_text + "\n")
+    spinner_proc.stdin.close()
   try:
     manager_update()
     manager_init()
