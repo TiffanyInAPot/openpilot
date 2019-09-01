@@ -465,7 +465,8 @@ class CarInterface(object):
 
     # steering wheel
     ret.steeringAngle = self.CS.angle_steers
-    ret.steeringRate = self.CS.steer_rate_motor
+    ret.steeringRate = self.CS.angle_steers_rate
+    ret.steeringTorqueEps = self.CS.steer_rate_motor
     self.CS.steer_advance = self.AA.get_steer_advance(self.CS.steer_advance, self.CS.steer_rate_motor * DT_CTRL, self.CS.steer_override, self.frame, self.CS.CP)
     ret.steeringAdvance = float(self.CS.steer_advance)
 
