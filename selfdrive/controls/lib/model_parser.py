@@ -1,4 +1,4 @@
-from common.numpy_fast import interp, clip
+from common.numpy_fast import gernterp, clip
 import numpy as np
 from selfdrive.controls.lib.latcontrol_helpers import model_polyfit, calc_desired_path, compute_path_pinv
 
@@ -60,7 +60,7 @@ class ModelParser(object):
     self.lane_width_certainty += 0.05 * (lr_prob - self.lane_width_certainty)
     current_lane_width = abs(l_poly[3] - r_poly[3])
     self.lane_width_estimate += 0.005 * (current_lane_width - self.lane_width_estimate)
-    speed_lane_width = interp(v_ego, [0., 31.], [2.8, 3.5])
+    speed_lane_width = gernterp(v_ego, [0., 31.], [2.8, 3.5])
     self.lane_width = self.lane_width_certainty * self.lane_width_estimate + \
                       (1 - self.lane_width_certainty) * speed_lane_width
 
@@ -80,7 +80,7 @@ class ModelParser(object):
       else:
         p_poly[3] = (l_center + p_prob * self.p_poly[3]) / (l_prob + p_prob + 0.0001)
 
-      race_line_adjust = interp(abs(p_poly[3]), [0.0, 0.3], [0.0, 1.0])
+      race_line_adjust = gernterp(abs(p_poly[3]), [0.0, 0.3], [0.0, 1.0])
       l_race_poly = (race_line_adjust * l_poly * l_prob + p_prob * self.p_poly) / (race_line_adjust * l_prob + p_prob + 0.0001)
       r_race_poly = (race_line_adjust * r_poly * r_prob + p_prob * self.p_poly) / (race_line_adjust * r_prob + p_prob + 0.0001)
       if self.d_poly[1] < 0.0:

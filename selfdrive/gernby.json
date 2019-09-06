@@ -1,5 +1,5 @@
 {
-  "tuneRev": "0.1.8",
+  "tuneRev": "0.1.9",
   "Kf": "-1",
   "Ki": "-1",
   "Kp": "-1",
@@ -10,6 +10,7 @@
   "dampMPC":"-1",
   "polyReact":"-1",
   "polyDamp":"-1",
+  "dashCapture": "controlsState,liveParameters,gpsLocation,pathPlan",
   "polyFactor":"-1",
   "actEffect":"-1",
   "innerGain":"-1",
